@@ -190,7 +190,7 @@ const TodoList: React.FC = () => {
 
      
       {/* Create Todo Form */}
-      <div className='border border-[#50B498] green mt-[3em]'>
+      <div className=' mt-[3em]'>
 
         <h1 className=''>Todo List</h1>
 
@@ -222,7 +222,7 @@ const TodoList: React.FC = () => {
           <div className='flex items-center mt-[1em]'>
 
 
-            <button type="submit" className='border border-[#50B498] green py-[0.5em] px-[1em] rounded-[0.25em] bg-[orange] text-white'>Add todo</button> {/* The button type is "submit" now */}
+            <button type="submit" className=' py-[0.5em] px-[1em] rounded-[0.25em] bg-[orange] text-white'>Add todo</button> {/* The button type is "submit" now */}
 
 
           </div>
@@ -239,7 +239,7 @@ const TodoList: React.FC = () => {
 
       <ul className='mt-[3em]'>
         {incompleteTodos.map((todo) => (
-          <li key={todo.id} className='flex flex-col border border-[#50B498] green'>
+          <li key={todo.id} className='flex flex-col '>
             <div className='flex items-center gap-[1em]'>
               {/* Conditionally render radio button */}
               <label className="flex items-center space-x-2">
@@ -265,8 +265,8 @@ const TodoList: React.FC = () => {
       </ul>
 
       {/* Completed Todos */}
-      <h2 className='mt-[2em] border border-[#50B498] green'>Finished ToDos</h2>
-      <div className='mt-[1em] border border-[#50B498] green'>
+      <h2 className='mt-[2em] '>Finished ToDos</h2>
+      <div className='mt-[1em] '>
         {completedTodos.map((todo) => (
           <div key={todo.id} className='flex flex-col'>
             <div className='flex items-center gap-[1em]'>
