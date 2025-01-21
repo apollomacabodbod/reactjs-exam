@@ -185,24 +185,54 @@ const TodoList: React.FC = () => {
   const completedTodos = todos.filter((todo) => todo.date_completed);
 
   return (
-    <div>
-      <h1>Todo List</h1>
-      
+    <div >
+
+
+     
       {/* Create Todo Form */}
       <div className='border border-[#50B498] green mt-[3em]'>
+
+        <h1 className=''>Todo List</h1>
+
         <form onSubmit={(e) => {
           e.preventDefault(); // Prevent the default form submission behavior
           handleCreate(); // Call the handleCreate function when the form is submitted
-        }}>
-          <input
-            type="text"
-            placeholder="Title"
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            required
-          />
-          <button type="submit">Submit Todo</button> {/* The button type is "submit" now */}
+        
+        }}
+
+        className='flex flex-col mt-[1em]'
+        
+        >
+
+
+          <div className='flex items-center'>
+
+            <input
+              type="text"
+              placeholder="Title"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              required
+              className='outline-none border border-[gray] rounded-[0.25em] pl-[0.5em] font-roboto'
+            />
+
+          </div>
+
+
+          <div className='flex items-center mt-[1em]'>
+
+
+            <button type="submit" className='border border-[#50B498] green py-[0.5em] px-[1em] rounded-[0.25em] bg-[orange] text-white'>Add todo</button> {/* The button type is "submit" now */}
+
+
+          </div>
+        
+
+
+          
         </form>
+
+
       </div>
 
       {error && <div className="error-message">{error}</div>} {/* Error message display */}
