@@ -16,7 +16,7 @@ export default function HomeTodoItems(){
     }
 
 
-    const [todo, setTodo] = useState<todoTypes[]>([
+    const [todo] = useState<todoTypes[]>([
 
       {id: 1, Title: "todo1", date_added:"jan22", date_completed: "jan22" },
       {id: 2, Title: "todo2", date_added:"jan22", date_completed: "jan22" },
@@ -37,6 +37,7 @@ export default function HomeTodoItems(){
 
 
           <div className="flex flex-col">
+
 
 
 
