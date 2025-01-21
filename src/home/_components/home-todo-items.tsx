@@ -31,14 +31,28 @@ export default function HomeTodoItems(){
     return(<>
 
 
-      <div className="grid grid-cols-1">
+      <div className="grid grid-cols-1 mt-[2em]">
 
-        {todo.map(() => (
+        {todo.map((items) => (
+
+          <div key={items.id} className="flex flex-col">
 
 
-          <div className="flex flex-col">
+
+            <div className="flex items-center gap-[1em]">
+
+              <input
+                type="radio"
+                id={`radio-${items.id}`}
+                name="fav_language"
+                value={items.Title}
+              />
+              <p>{items.Title}</p>
+
+            </div>
 
 
+           
 
 
           </div>

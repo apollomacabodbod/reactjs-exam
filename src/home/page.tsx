@@ -1,3 +1,4 @@
+import HomeTodoItems from "./_components/home-todo-items";
 import HomeTodoList from "./_components/home-todo-list";
 
 export default function Home() {
@@ -9,6 +10,7 @@ export default function Home() {
 
 
       <HomeTodoList/>
+      <HomeTodoItems/>
 
 
 
