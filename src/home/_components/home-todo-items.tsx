@@ -14,6 +14,8 @@ const TodoList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);  // Error state
   const [newTitle, setNewTitle] = useState<string>('');  // State to manage new todo title
   const [selectedTodoId, setSelectedTodoId] = useState<string | null>(null); // State to manage the selected radio button
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for controlling modal visibility
+  const [todoToEdit, setTodoToEdit] = useState<Todo | null>(null); // State to hold the todo being edited
 
   useEffect(() => {
     // Fetch data from the API when the component mounts
@@ -50,23 +52,26 @@ const TodoList: React.FC = () => {
     }
   };
 
-  // Handle edit operation
-  const handleEdit = async (id: string, newTitle: string) => {
+  // Handle edit operation (when submitting the modal form)
+  const handleEditSubmit = async () => {
+    if (!todoToEdit || !todoToEdit.Title.trim()) return; // Ensure there's a valid todo and title
+
     try {
-      const response = await fetch(`https://678f686f49875e5a1a91b684.mockapi.io/todo/${id}`, {
+      const response = await fetch(`https://678f686f49875e5a1a91b684.mockapi.io/todo/${todoToEdit.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          Title: newTitle,
+          Title: todoToEdit.Title,
         }),
       });
       if (!response.ok) {
         throw new Error('Failed to update todo');
       }
       const updatedTodo = await response.json();
-      setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo))); // Update the todo in state
+      setTodos(todos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))); // Update the todo in state
+      setIsModalOpen(false); // Close the modal after edit
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
     }
@@ -134,6 +139,39 @@ const TodoList: React.FC = () => {
     }
   };
 
+  const openModal = (todo: Todo) => {
+    setTodoToEdit(todo); // Set the todo to edit
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+    setTodoToEdit(null); // Reset the todo being edited
+  };
+
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    const modalContainer = e.target as HTMLElement;
+    if (modalContainer.classList.contains('modal-overlay')) {
+      closeModal();
+    }
+  };
+
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeModal(); // Close modal on Escape key press
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown); // Cleanup on unmount
+    };
+  }, [isModalOpen]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -167,7 +205,6 @@ const TodoList: React.FC = () => {
         </form>
       </div>
 
-
       {error && <div className="error-message">{error}</div>} {/* Error message display */}
 
       <ul className='mt-[3em]'>
@@ -186,7 +223,7 @@ const TodoList: React.FC = () => {
               </label>
 
               {/* Edit Button */}
-              <button onClick={() => handleEdit(todo.id, prompt('Enter new title:', todo.Title) || todo.Title)}>
+              <button onClick={() => openModal(todo)}>
                 Edit
               </button>
 
@@ -220,7 +257,7 @@ const TodoList: React.FC = () => {
               <h2>{todo.Title}</h2>
               <div className='flex items-center gap-[1em]'>
                 {/* Edit Button */}
-                <button onClick={() => handleEdit(todo.id, prompt('Enter new title:', todo.Title) || todo.Title)}>
+                <button onClick={() => openModal(todo)}>
                   Edit
                 </button>
 
@@ -231,6 +268,38 @@ const TodoList: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {/* Modal for editing todo */}
+      {isModalOpen && todoToEdit && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-opacity duration-300 modal-overlay"
+          onClick={handleOutsideClick}
+        >
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-w-full transition-transform transform">
+            <h2 className="text-xl font-semibold mb-4 text-center">Edit Todo</h2>
+            <input
+              type="text"
+              value={todoToEdit.Title}
+              onChange={(e) => setTodoToEdit({ ...todoToEdit, Title: e.target.value })}
+              className="w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <div className="flex justify-between mt-4">
+              <button 
+                onClick={handleEditSubmit}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg focus:outline-none hover:bg-blue-600 transition duration-200"
+              >
+                Save
+              </button>
+              <button 
+                onClick={closeModal}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg focus:outline-none hover:bg-gray-600 transition duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
