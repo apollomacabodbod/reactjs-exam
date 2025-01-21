@@ -74,7 +74,7 @@ const TodoList: React.FC = () => {
 
   // Handle create operation
   const handleCreate = async () => {
-    if (!newTitle) {
+    if (!newTitle.trim()) {
       setError('Title is required!');
       return;
     }
@@ -100,6 +100,7 @@ const TodoList: React.FC = () => {
       const newTodo = await response.json();
       setTodos([...todos, newTodo]); // Add new todo to state
       setNewTitle('');  // Reset the input field
+      setError(null);  // Clear error
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
     }
@@ -151,28 +152,28 @@ const TodoList: React.FC = () => {
       
       {/* Create Todo Form */}
       <div className='border border-[#50B498] green mt-[3em]'>
-        <input
-          type="text"
-          placeholder="Title"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-        />
-        <button onClick={handleCreate}>Add Todo</button>
+        <form onSubmit={(e) => {
+          e.preventDefault(); // Prevent the default form submission behavior
+          handleCreate(); // Call the handleCreate function when the form is submitted
+        }}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            required
+          />
+          <button type="submit">Submit Todo</button> {/* The button type is "submit" now */}
+        </form>
       </div>
 
 
+      {error && <div className="error-message">{error}</div>} {/* Error message display */}
 
       <ul className='mt-[3em]'>
         {incompleteTodos.map((todo) => (
-
-
-
           <li key={todo.id} className='flex flex-col border border-[#50B498] green'>
-
-
-
             <div className='flex items-center gap-[1em]'>
-
               {/* Conditionally render radio button */}
               <label className="flex items-center space-x-2">
                 <input
@@ -184,45 +185,24 @@ const TodoList: React.FC = () => {
                 <span>{todo.Title}</span>
               </label>
 
-
-
               {/* Edit Button */}
               <button onClick={() => handleEdit(todo.id, prompt('Enter new title:', todo.Title) || todo.Title)}>
-              Edit
+                Edit
               </button>
 
               {/* Remove Button */}
               <button onClick={() => handleRemove(todo.id)}>Remove</button>
-
-
             </div>
-
-
-          
-
-
-
-          
           </li>
         ))}
       </ul>
 
-
-
-
       {/* Completed Todos */}
       <h2 className='mt-[2em] border border-[#50B498] green'>Finished ToDos</h2>
-
-
       <div className='mt-[1em] border border-[#50B498] green'>
-
         {completedTodos.map((todo) => (
-
-          <div key={todo.id} className='flex flex-col '>
-
-
+          <div key={todo.id} className='flex flex-col'>
             <div className='flex items-center gap-[1em]'>
-
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -237,54 +217,20 @@ const TodoList: React.FC = () => {
               >
                 <path d="M5 13l4 4L19 7" />
               </svg>
-
-
               <h2>{todo.Title}</h2>
-
-
-
               <div className='flex items-center gap-[1em]'>
-
-
-
                 {/* Edit Button */}
                 <button onClick={() => handleEdit(todo.id, prompt('Enter new title:', todo.Title) || todo.Title)}>
-              Edit
+                  Edit
                 </button>
-
-
 
                 {/* Remove Button */}
                 <button onClick={() => handleRemove(todo.id)}>Remove</button>
-
-
-
               </div>
-
-
-
             </div>
-
-
-
-
-
- 
-
-
-
-           
-
-          
-
-
-
           </div>
         ))}
       </div>
-
-
-
     </div>
   );
 };
