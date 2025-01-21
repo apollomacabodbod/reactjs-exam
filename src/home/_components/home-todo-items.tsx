@@ -209,7 +209,7 @@ const TodoList: React.FC = () => {
 
             <input
               type="text"
-              placeholder="Title"
+              placeholder="Todo text here"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               required
